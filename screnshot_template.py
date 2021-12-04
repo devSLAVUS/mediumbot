@@ -1,0 +1,28 @@
+@dp.message_handler(commands=['guys'])
+@rate_limit(5, 'guys') 
+async def help_message(message: types.Message):
+    await bot.send_message(message.chat.id, "<b>Загрузка графика...</b>", parse_mode="html")
+    get_pic()
+    time.sleep(1)
+    photo = types.InputFile("/reenshot.png")
+    await bot.send_photo(chat_id=message.chat.id, photo=photo)
+@dp.message_handler(commands=['graf'])
+@rate_limit(5, 'graf')
+async def help_message(message: types.Message):
+    await bot.send_message(message.chat.id, "<b>Загрузка графика...</b>", parse_mode="html")
+    get_graf()
+    time.sleep(1)
+    photo = types.InputFile("/grafshot.png")
+    await bot.send_photo(chat_id=message.chat.id, photo=photo)
+@dp.message_handler(commands=['gays'])
+async def help_message(message: types.Message):
+    photo = types.InputFile("/gays.jpg")
+    await bot.send_photo(chat_id=message.chat.id, photo=photo)
+@dp.message_handler(commands=['zabix'])
+@rate_limit(5, 'zabix')
+async def help_message(message: types.Message):
+    await bot.send_message(message.chat.id, "<b>Загрузка графика...</b>", parse_mode="html")
+    get_zab()
+    time.sleep(1)
+    photo = types.InputFile("/zabshot.png")
+    await bot.send_photo(chat_id=message.chat.id, photo=photo)
