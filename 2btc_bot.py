@@ -1,5 +1,7 @@
 import asyncio
+import random
 from aiogram.dispatcher import DEFAULT_RATE_LIMIT
+from aiogram.dispatcher import filters
 from aiogram.dispatcher.handler import CancelHandler, current_handler
 from aiogram.dispatcher.middlewares import BaseMiddleware
 import requests
@@ -34,12 +36,12 @@ def rate_limit(limit: int, key=None):
     return decorator
 class ThrottlingMiddleware(BaseMiddleware):
 
-    def __init__(self, limit=DEFAULT_RATE_LIMIT, key_prefix='antiflood_'):
+   def __init__(self, limit=DEFAULT_RATE_LIMIT, key_prefix='antiflood_'):
         self.rate_limit = limit
         self.prefix = key_prefix
         super(ThrottlingMiddleware, self).__init__()
 
-    async def on_process_message(self, message: types.Message, data: dict):
+   async def on_process_message(self, message: types.Message, data: dict):
         # Get current handler
         handler = current_handler.get()
 
@@ -63,7 +65,7 @@ class ThrottlingMiddleware(BaseMiddleware):
             # Cancel current handler
             raise CancelHandler()
 
-    async def message_throttled(self, message: types.Message, throttled: Throttled):
+   async def message_throttled(self, message: types.Message, throttled: Throttled):
         handler = current_handler.get()
         dispatcher = Dispatcher.get_current()
         if handler:
@@ -88,7 +90,6 @@ class ThrottlingMiddleware(BaseMiddleware):
         if thr.exceeded_count == throttled.exceeded_count:
             await message.reply('spokoyno!')
 
-
 @dp.message_handler(commands=['m'])
 async def handle_text(message):
     await bot.send_message(message.chat.id, "<b>Введите маску: </b>", parse_mode="html")
@@ -111,6 +112,67 @@ async def process_help_command(message: types.Message):
     price1 = price[:9]
     await bot.send_message(
         message.chat.id, f"{datetime.now().strftime('%d-%m-%Y      %H:%M')}\nSell BTC price: {price1}")
+@dp.message_handler(commands=['solana'])
+@rate_limit(5, 'solana')
+async def process_help_command(message: types.Message):
+    r = "https://api.binance.com/api/v3/ticker/price?symbol=SOLUSDT"
+    r = requests.get(r)
+    data = r.json()
+    price = data["price"]
+    price1 = price[:9]
+    await bot.send_message(
+        message.chat.id, f"{datetime.now().strftime('%d-%m-%Y      %H:%M')}\nSell SOLANA price: {price1}")
+@dp.message_handler(commands=['ass'])
+@rate_limit(5, 'solana')
+async def process_help_command(message: types.Message):
+    await bot.send_message(
+        message.chat.id, "https://youtu.be/c9Yl9B5cP6U")       
+
+
+
+@dp.message_handler(lambda message: 'секс' in message.text)
+async def sendphoto(msg):
+        arr=["image1.jpg", "image2.jpg","ricardo-milos.mp4"] # or imagefileid
+        photo=open(random.choice(arr), "rb")
+        await bot.send_video(msg.chat.id, photo)
+@dp.message_handler(lambda message: 'Секс' in message.text)
+async def sendphoto(msg):
+        arr=["image1.jpg", "image2.jpg","ricardo-milos.mp4"] # or imagefileid
+        photo=open(random.choice(arr), "rb")
+        await bot.send_video(msg.chat.id, photo)
+@dp.message_handler(lambda message: 'похуй' in message.text)
+async def sendphoto(msg):
+        photo=open("pox.jpg", "rb")
+        await bot.send_photo(msg.chat.id, photo)
+@dp.message_handler(lambda message: 'Похуй' in message.text)
+async def sendphoto(msg):
+        photo=open("pox.jpg", "rb")
+        await bot.send_photo(msg.chat.id, photo)
+@dp.message_handler(lambda message: 'поебать' in message.text)
+async def sendphoto(msg):
+        photo=open("pox.jpg", "rb")
+        await bot.send_photo(msg.chat.id, photo)
+@dp.message_handler(lambda message: 'Поебать' in message.text)
+async def sendphoto(msg):
+        photo=open("pox.jpg", "rb")
+        await bot.send_photo(msg.chat.id, photo)
+@dp.message_handler(lambda message: 'гей' in message.text)
+async def sendphoto(msg):
+        photo=open("gay.jpg", "rb")
+        await bot.send_photo(msg.chat.id, photo)
+@dp.message_handler(lambda message: 'Гей' in message.text)
+async def sendphoto(msg):
+        photo=open("gay.jpg", "rb")
+        await bot.send_photo(msg.chat.id, photo)
+@dp.message_handler(lambda message: 'gay' in message.text)
+async def sendphoto(msg):
+        photo=open("gay.jpg", "rb")
+        await bot.send_photo(msg.chat.id, photo)
+@dp.message_handler(lambda message: 'Gay' in message.text)
+async def sendphoto(msg):
+        photo=open("gay.jpg", "rb")
+        await bot.send_photo(msg.chat.id, photo)
+
 @dp.message_handler(commands=['help'])
 async def help_message(message: types.Message):
     await bot.send_message(message.from_user.id, message.text)
@@ -147,7 +209,9 @@ inline_btn_13 = InlineKeyboardButton('Москва', callback_data='moscow')
 inline_btn_14 = InlineKeyboardButton('Санкт-Петербург', callback_data='spb')
 inline_btn_15 = InlineKeyboardButton('Курган', callback_data='kurgan')
 inline_btn_16 = InlineKeyboardButton('Дубаи', callback_data='dubai')
-inline_kb2 = InlineKeyboardMarkup().add(inline_btn_13, inline_btn_14, inline_btn_15, inline_btn_16)
+inline_btn_17 = InlineKeyboardButton('Белгород(военная база)', callback_data='belgorod')
+inline_btn_18 = InlineKeyboardButton('Родная Челяба', callback_data='chelyabinsk')
+inline_kb2 = InlineKeyboardMarkup().add(inline_btn_13, inline_btn_14, inline_btn_15,inline_btn_16, inline_btn_17,inline_btn_18)
 
 @dp.message_handler(commands=['rus'])
 async def help_message(message: types.Message):
@@ -285,6 +349,30 @@ async def process_callback_button1(callback_query: types.CallbackQuery):
 @dp.callback_query_handler(lambda c: c.data == 'dubai')
 async def process_callback_button1(callback_query: types.CallbackQuery):
     g = "dubai"
+    s = get_weather(g)
+    await bot.send_message(
+            callback_query.message.chat.id, f"***{datetime.now().strftime('%Y-%m-%d %H:%M')}***\n"
+                            f"Погода в городе: {s[0]}\nТемпература: {s[1]}C°\n"
+                            f"Влажность: {s[3]}%\nДавление: {s[4]} мм.рт.ст\nВетер: {s[5]} м/с\n"
+                            f"Восход солнца: {s[6]}\nЗакат солнца: {s[7]}\nПродолжительность дня: {s[8]}\n"
+                            f"Хорошего дня!"
+                        )
+    await bot.delete_message(chat_id=callback_query.message.chat.id, message_id=callback_query.message.message_id)
+@dp.callback_query_handler(lambda c: c.data == 'belgorod')
+async def process_callback_button1(callback_query: types.CallbackQuery):
+    g = "belgorod"
+    s = get_weather(g)
+    await bot.send_message(
+            callback_query.message.chat.id, f"***{datetime.now().strftime('%Y-%m-%d %H:%M')}***\n"
+                            f"Погода в городе: {s[0]}\nТемпература: {s[1]}C°\n"
+                            f"Влажность: {s[3]}%\nДавление: {s[4]} мм.рт.ст\nВетер: {s[5]} м/с\n"
+                            f"Восход солнца: {s[6]}\nЗакат солнца: {s[7]}\nПродолжительность дня: {s[8]}\n"
+                            f"Хорошего дня!"
+                        )
+    await bot.delete_message(chat_id=callback_query.message.chat.id, message_id=callback_query.message.message_id)
+@dp.callback_query_handler(lambda c: c.data == 'chelyabinsk')
+async def process_callback_button1(callback_query: types.CallbackQuery):
+    g = "chelyabinsk"
     s = get_weather(g)
     await bot.send_message(
             callback_query.message.chat.id, f"***{datetime.now().strftime('%Y-%m-%d %H:%M')}***\n"
